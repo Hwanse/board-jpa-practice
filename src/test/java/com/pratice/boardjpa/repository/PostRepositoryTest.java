@@ -26,10 +26,9 @@ class PostRepositoryTest {
     @Test
     public void 게시글을_생성한다() throws Exception {
         // given
-        Board board = new Board("title", 'Y');
-        em.persist(board);
+        Board board = createBoard();
 
-        Post post = Post.createPost("제목", "내용", 'Y', board);
+        Post post = createPost(board);
         // when
         postRepository.save(post);
         Post findPost = postRepository.findPostById(post.getId());
@@ -39,13 +38,11 @@ class PostRepositoryTest {
     }
 
     @Test
-    @Rollback(false)
     public void 답변게시글을_생성한다() throws Exception {
         // given
-        Board board = new Board("title", 'Y');
-        em.persist(board);
+        Board board = createBoard();
 
-        Post post = Post.createPost("제목", "내용", 'Y', board);
+        Post post = createPost(board);
         em.persist(post);
 
         Post replyPost = Post.createReplyPost("제목2", "내용", 'Y', board, post);
@@ -58,5 +55,14 @@ class PostRepositoryTest {
         assertThat(findReplyPost.getParent()).isEqualTo(post);
     }
 
+    private Post createPost(Board board) {
+        return Post.createPost("제목", "내용", 'Y', board);
+    }
+
+    private Board createBoard() {
+        Board board = new Board("title", 'Y');
+        em.persist(board);
+        return board;
+    }
 
 }
