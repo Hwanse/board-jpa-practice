@@ -1,6 +1,7 @@
 package com.pratice.boardjpa.repository;
 
 import com.pratice.boardjpa.domain.Board;
+import java.util.List;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,8 +16,13 @@ public class BoardRepository {
         em.persist(board);
     }
 
-    public Board findBoardById(Long id) {
+    public Board findById(Long id) {
         return em.find(Board.class, id);
+    }
+
+    public List<Board> findAll() {
+        return em.createQuery("select b from Board b", Board.class)
+                 .getResultList();
     }
 
 }

@@ -27,7 +27,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "post_id")
     private Long id;
 
@@ -48,14 +49,14 @@ public class Post {
 
     private Character useFlag;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Post parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Post> child = new ArrayList<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "post")
+    @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public static Post createPost(String name, String contents, Character useFlag, Board board) {
@@ -67,7 +68,8 @@ public class Post {
         return post;
     }
 
-    public static Post createReplyPost(String name, String contents, Character useFlag, Board board, Post parent) {
+    public static Post createReplyPost(String name, String contents, Character useFlag, Board board,
+                                       Post parent) {
         Post post = new Post();
         post.name = name;
         post.contents = contents;
@@ -77,6 +79,15 @@ public class Post {
         parent.getChild().add(post);
 
         return post;
+    }
+
+    public void deleteChilds() {
+        List<Post> targetChild = child;
+        while (!targetChild.isEmpty()) {
+
+        }
+        this.child.clear();
+        this.comments.clear();
     }
 
 }

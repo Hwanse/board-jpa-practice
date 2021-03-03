@@ -1,12 +1,13 @@
 package com.pratice.boardjpa.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.pratice.boardjpa.domain.Board;
 import com.pratice.boardjpa.domain.Post;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,21 +25,23 @@ class PostRepositoryTest {
     private PostRepository postRepository;
 
     @Test
-    public void 게시글을_생성한다() throws Exception {
+    @DisplayName("게시글을 생성한다")
+    public void createPost() throws Exception {
         // given
         Board board = createBoard();
 
         Post post = createPost(board);
         // when
         postRepository.save(post);
-        Post findPost = postRepository.findPostById(post.getId());
+        Post findPost = postRepository.findById(post.getId());
 
         // then
         assertThat(findPost).isEqualTo(post);
     }
 
     @Test
-    public void 답변게시글을_생성한다() throws Exception {
+    @DisplayName("답변게시글을 생성한다")
+    public void createReplyPost() throws Exception {
         // given
         Board board = createBoard();
 
@@ -49,10 +52,33 @@ class PostRepositoryTest {
 
         // when
         postRepository.save(replyPost);
-        Post findReplyPost = postRepository.findPostById(replyPost.getId());
+        Post findReplyPost = postRepository.findById(replyPost.getId());
         // then
         assertThat(findReplyPost).isEqualTo(replyPost);
         assertThat(findReplyPost.getParent()).isEqualTo(post);
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제한다")
+    @Rollback(false)
+    public void deletePost() throws Exception {
+        // given
+        Board board = createBoard();
+        Post post = createPost(board);
+
+        for (int i = 0; i < 10; i++) {
+            Post replyPost = Post.createReplyPost("title", "내용",
+                                                  'Y', board, post);
+        }
+        em.persist(post);
+
+        // when
+        postRepository.delete(post);
+        Post deletedPost = postRepository.findById(post.getId());
+
+        // then
+        assertThat(deletedPost).isNull();
+        assertThat(post.getChild()).isEmpty();
     }
 
     private Post createPost(Board board) {

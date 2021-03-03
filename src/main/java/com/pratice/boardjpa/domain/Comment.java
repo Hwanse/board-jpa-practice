@@ -30,7 +30,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -44,11 +44,11 @@ public class Comment {
 
     private Character useFlag;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(fetch = LAZY, mappedBy = "parent")
+    @OneToMany(fetch = LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> child = new ArrayList<>();
 
     public static Comment createComment(Post post, String contents, Character useFlag) {
@@ -67,6 +67,10 @@ public class Comment {
         comment.parent = parent;
         parent.getChild().add(comment);
         return comment;
+    }
+
+    public void deleteChild() {
+        this.child.clear();
     }
 
 }

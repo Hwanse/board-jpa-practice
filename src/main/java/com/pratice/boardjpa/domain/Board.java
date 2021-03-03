@@ -3,7 +3,9 @@ package com.pratice.boardjpa.domain;
 import static javax.persistence.FetchType.LAZY;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,8 +31,8 @@ public class Board {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(fetch = LAZY, mappedBy = "board")
-    private List<Post> posts;
+    @OneToMany(fetch = LAZY, mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "create_date")
