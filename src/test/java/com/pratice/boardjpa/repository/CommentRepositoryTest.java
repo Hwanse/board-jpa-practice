@@ -28,7 +28,7 @@ class CommentRepositoryTest {
         // given
         Board board = createBoard();
         Post post = createPost(board);
-        Comment comment = Comment.createComment(post, "댓글1", 'Y');
+        Comment comment = Comment.createComment(post, "댓글1", true);
 
         // when
         commentRepository.save(comment);
@@ -45,10 +45,10 @@ class CommentRepositoryTest {
         // given
         Board board = createBoard();
         Post post = createPost(board);
-        Comment comment = Comment.createComment(post, "댓글1", 'Y');
+        Comment comment = Comment.createComment(post, "댓글1", true);
         em.persist(comment);
 
-        Comment comment2 = Comment.createReplyComment(post, comment, "댓글2", 'Y');
+        Comment comment2 = Comment.createReplyComment(post, comment, "댓글2", true);
 
         // when
         commentRepository.save(comment2);
@@ -67,10 +67,10 @@ class CommentRepositoryTest {
         // given
         Board board = createBoard();
         Post post = createPost(board);
-        Comment comment = Comment.createComment(post, "댓글1", 'Y');
+        Comment comment = Comment.createComment(post, "댓글1", true);
 
         for (int i = 0; i < 10; i++) {
-            Comment replyComment = Comment.createReplyComment(post, comment, "내내용", 'Y');
+            Comment replyComment = Comment.createReplyComment(post, comment, "내내용", true);
             comment.getChild().add(replyComment);
         }
 
@@ -87,11 +87,11 @@ class CommentRepositoryTest {
 
 
     private Post createPost(Board board) {
-        return Post.createPost("제목", "내용", 'Y', board);
+        return Post.createPost("제목", "내용", true, board);
     }
 
     private Board createBoard() {
-        Board board = new Board("title", 'Y');
+        Board board = Board.createBoard("title", true);
         em.persist(board);
         return board;
     }

@@ -48,7 +48,7 @@ class PostRepositoryTest {
         Post post = createPost(board);
         em.persist(post);
 
-        Post replyPost = Post.createReplyPost("제목2", "내용", 'Y', board, post);
+        Post replyPost = Post.createReplyPost("제목2", "내용", true, board, post);
 
         // when
         postRepository.save(replyPost);
@@ -68,7 +68,7 @@ class PostRepositoryTest {
 
         for (int i = 0; i < 10; i++) {
             Post replyPost = Post.createReplyPost("title", "내용",
-                                                  'Y', board, post);
+                                                  true, board, post);
         }
         em.persist(post);
 
@@ -82,11 +82,11 @@ class PostRepositoryTest {
     }
 
     private Post createPost(Board board) {
-        return Post.createPost("제목", "내용", 'Y', board);
+        return Post.createPost("제목", "내용", true, board);
     }
 
     private Board createBoard() {
-        Board board = new Board("title", 'Y');
+        Board board = Board.createBoard("title", true);
         em.persist(board);
         return board;
     }

@@ -18,7 +18,7 @@ class BoardRepositoryTest {
     @Test
     public void 게시판을_생성한다() throws Exception {
         // given
-        final Board board = new Board("title1", 'Y');
+        final Board board = Board.createBoard("title1", true);
         // when
         boardRepository.save(board);
         Board findBoard = boardRepository.findById(board.getId());

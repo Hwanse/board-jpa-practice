@@ -21,15 +21,6 @@ public class PostRepository {
         post.deleteChilds();
     }
 
-    public void deleteBulkOperation(Post post) {
-        em.createQuery("delete from Post p " +
-                " where p.parent = :postId" +
-                " and p.id in (select c.post from Comment c" +
-                " where c.post = :postId )"
-            ).executeUpdate();
-
-    }
-
     public Post findById(Long id) {
         return em.find(Post.class, id);
     }

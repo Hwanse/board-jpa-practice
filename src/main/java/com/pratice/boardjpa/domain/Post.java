@@ -47,7 +47,7 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime modifyDate;
 
-    private Character useFlag;
+    private Boolean useFlag;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
@@ -59,7 +59,7 @@ public class Post {
     @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    public static Post createPost(String name, String contents, Character useFlag, Board board) {
+    public static Post createPost(String name, String contents, Boolean useFlag, Board board) {
         Post post = new Post();
         post.name = name;
         post.contents = contents;
@@ -68,7 +68,7 @@ public class Post {
         return post;
     }
 
-    public static Post createReplyPost(String name, String contents, Character useFlag, Board board,
+    public static Post createReplyPost(String name, String contents, Boolean useFlag, Board board,
                                        Post parent) {
         Post post = new Post();
         post.name = name;
@@ -76,16 +76,20 @@ public class Post {
         post.useFlag = useFlag;
         post.board = board;
         post.parent = parent;
-        parent.getChild().add(post);
+        parent.getChild()
+              .add(post);
 
         return post;
     }
 
-    public void deleteChilds() {
-        List<Post> targetChild = child;
-        while (!targetChild.isEmpty()) {
 
-        }
+    public void modifyPost(Post post) {
+        this.name = post.getName();
+        this.contents = post.getContents();
+        this.useFlag = post.getUseFlag();
+    }
+
+    public void deleteChilds() {
         this.child.clear();
         this.comments.clear();
     }

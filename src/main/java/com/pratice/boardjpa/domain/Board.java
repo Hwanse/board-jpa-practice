@@ -39,12 +39,18 @@ public class Board {
     private LocalDateTime createDate;
 
     @Column(name = "use_flag")
-    private Character useFlag;
+    private Boolean useFlag;
 
-    @Builder
-    public Board(String name, Character useFlag) {
-        this.name = name;
-        this.useFlag = useFlag;
+    public static Board createBoard(String name, Boolean useFlag) {
+        Board board = new Board();
+        board.name = name;
+        board.useFlag = useFlag;
+        return board;
     }
+
+    public void deletePosts() {
+        posts.clear();
+    }
+
 
 }

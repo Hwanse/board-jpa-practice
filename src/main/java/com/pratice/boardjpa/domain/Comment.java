@@ -42,7 +42,7 @@ public class Comment {
 
     private String contents;
 
-    private Character useFlag;
+    private Boolean useFlag;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
@@ -51,7 +51,7 @@ public class Comment {
     @OneToMany(fetch = LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Comment> child = new ArrayList<>();
 
-    public static Comment createComment(Post post, String contents, Character useFlag) {
+    public static Comment createComment(Post post, String contents, Boolean useFlag) {
         Comment comment = new Comment();
         comment.post = post;
         comment.contents = contents;
@@ -59,7 +59,7 @@ public class Comment {
         return comment;
     }
 
-    public static Comment createReplyComment(Post post, Comment parent, String contents, Character useFlag) {
+    public static Comment createReplyComment(Post post, Comment parent, String contents, Boolean useFlag) {
         Comment comment = new Comment();
         comment.post = post;
         comment.contents = contents;
@@ -67,6 +67,11 @@ public class Comment {
         comment.parent = parent;
         parent.getChild().add(comment);
         return comment;
+    }
+
+    public void modifyComment(Comment comment) {
+        this.contents = comment.contents;
+        this.useFlag = comment.useFlag;
     }
 
     public void deleteChild() {
